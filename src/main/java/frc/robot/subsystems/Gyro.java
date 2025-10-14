@@ -1,0 +1,24 @@
+package frc.robot.subsystems;
+
+import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.xrp.XRPGyro;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Gyro extends SubsystemBase {
+    private final XRPGyro gyro = new XRPGyro();
+    private MedianFilter mfx = new MedianFilter(200);
+    private MedianFilter mfy = new MedianFilter(200);
+    private MedianFilter mfz = new MedianFilter(200);
+
+    public Gyro() {
+        gyro.reset();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Rotation (X)", mfx.calculate(gyro.getAngleX()));
+        SmartDashboard.putNumber("Rotation (Y)", mfy.calculate(gyro.getAngleY()));
+        SmartDashboard.putNumber("Rotation (Z)", mfz.calculate(gyro.getAngleZ()));
+    }
+}
