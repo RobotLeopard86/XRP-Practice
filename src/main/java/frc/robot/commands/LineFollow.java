@@ -19,7 +19,7 @@ public class LineFollow extends Command {
     public LineFollow(Drivetrain dt) {
         drive = dt;
         addRequirements(drive);
-        drive.setDefaultCommand(this);
+        //drive.setDefaultCommand(this);
     }
 
     @Override

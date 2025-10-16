@@ -1,16 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 
 public class ArmAdjust extends Command {
-    private final XboxController xbox;
+    private final CommandXboxController xbox;
     private final Arm arm;
 
-    public ArmAdjust(XboxController xb, Arm a) {
+    public ArmAdjust(CommandXboxController xb, Arm a) {
         xbox = xb;
         arm = a;
         addRequirements(arm);
@@ -24,8 +24,8 @@ public class ArmAdjust extends Command {
     public void execute() {
         double angle = arm.getAngle().getDegrees();
 
-        if(xbox.getAButton() && angle <= 179) angle++;
-        if(xbox.getYButton() && angle >= 1) angle--;
+        if(xbox.a().getAsBoolean() && angle <= 179) angle++;
+        if(xbox.y().getAsBoolean() && angle >= 1) angle--;
 
         arm.setAngle(Rotation2d.fromDegrees(angle));
 

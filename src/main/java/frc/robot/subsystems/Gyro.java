@@ -15,6 +15,18 @@ public class Gyro extends SubsystemBase {
         gyro.reset();
     }
 
+    public double getPitch() {
+        return mfx.calculate(gyro.getAngleY());
+    }
+
+    public double getYaw() {
+        return mfx.calculate(gyro.getAngleZ());
+    }
+
+    public double getRoll() {
+        return mfx.calculate(gyro.getAngleX());
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Rotation (X)", mfx.calculate(gyro.getAngleX()));

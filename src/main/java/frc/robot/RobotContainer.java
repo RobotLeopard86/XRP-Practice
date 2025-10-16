@@ -9,13 +9,14 @@ import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.ArmAdjust;
 import frc.robot.commands.LineFollow;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TurnNinety;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gyro;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,18 +32,18 @@ public class RobotContainer {
 
   private final ArmAdjust aa;
   private final LineFollow lf;
-  private final ArcadeDrive adrive;// = null;
-  private final TankDrive tdrive = null;
+  private final ArcadeDrive adrive = null;
+  private final TankDrive tdrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final XboxController driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public SendableChooser<Command> chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    adrive = new ArcadeDrive(driverController, drivetrain);
-    //tdrive = new TankDrive(driverController, drivetrain);
+    //adrive = new ArcadeDrive(driverController, drivetrain);
+    tdrive = new TankDrive(driverController, drivetrain);
 
     aa = new ArmAdjust(driverController, new Arm());
 
@@ -54,5 +55,7 @@ public class RobotContainer {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    driverController.x().onTrue(new TurnNinety(drivetrain, gyro));
+  }
 }

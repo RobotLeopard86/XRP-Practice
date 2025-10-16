@@ -1,18 +1,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
 public class ArcadeDrive extends Command {
-    private final XboxController xbox;
+    private final CommandXboxController xbox;
     private final DifferentialDrive dd;
     private final Drivetrain drive;
 
-    public ArcadeDrive(XboxController xb, Drivetrain dt) {
+    public ArcadeDrive(CommandXboxController xb, Drivetrain dt) {
         xbox = xb;
         drive = dt;
         addRequirements(drive);
