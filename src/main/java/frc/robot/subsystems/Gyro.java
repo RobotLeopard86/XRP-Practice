@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gyro extends SubsystemBase {
     private final XRPGyro gyro = new XRPGyro();
-    private MedianFilter mfx = new MedianFilter(200);
-    private MedianFilter mfy = new MedianFilter(200);
-    private MedianFilter mfz = new MedianFilter(200);
+    private MedianFilter mfx = new MedianFilter(20);
+    private MedianFilter mfy = new MedianFilter(20);
+    private MedianFilter mfz = new MedianFilter(20);
 
     public Gyro() {
         gyro.reset();
