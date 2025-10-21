@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
@@ -11,11 +13,16 @@ public class TurnNinety extends Command {
 
     private double initial;
     private double target;
-    private final double speed = 0.5;
+    private final double speedMultiplier = 0.5;
+    private final double minSpeed = 0.15;
+
+    private PIDController pid = new PIDController(1, 0, 0);
 
     public TurnNinety(Drivetrain dt, Gyro gy) {
         drive = dt;
         gyro = gy;
+        pid.enableContinuousInput(0, 360);
+        pid.setTolerance(0.5);
         addRequirements(drive);
         addRequirements(gyro);
     }
@@ -23,36 +30,33 @@ public class TurnNinety extends Command {
     @Override
     public void initialize() {
         initial = gyro.getYaw();
-        if(initial < 0) initial += 360;
-        target = (initial + 90);
-        if(target < 0) target += 360;
+        target = (initial + 90) % 360;
         SmartDashboard.putNumber("TN - Initial", initial);
         SmartDashboard.putNumber("TN - Target", target);
+        SmartDashboard.putBoolean("TN - Active", true);
     }
 
     @Override
     public void execute() {
-        drive.setMotors(speed, speed);
         double yaw = gyro.getYaw();
-        if(yaw < 0) yaw += 360;
-        if(target > 360) yaw = 360 - yaw;
+        double pidOut = pid.calculate(yaw, target);
+        double speed = MathUtil.clamp(pidOut / (360 * -speedMultiplier), -1, 1);
+        if(Math.abs(speed) < minSpeed) speed = minSpeed * (speed / Math.abs(speed));
+        drive.setMotors(speed, speed);
         SmartDashboard.putNumber("TN - Current", yaw);
+        SmartDashboard.putNumber("TN - PID Out", pidOut);
     }
 
     @Override
     public boolean isFinished() { 
-        double yaw = gyro.getYaw();
-        if(yaw < 0) yaw = 360 - yaw;
-        if(target > 360) yaw = 360 - yaw;
-        return yaw >= target;
+        return pid.atSetpoint();
     }
 
     @Override
     public void end(boolean interrupt) {
         double yaw = gyro.getYaw();
-        if(yaw < 0) yaw = 360 - yaw;
-        if(target > 360) yaw = 360 - yaw;
         SmartDashboard.putNumber("TN - Current", yaw);
+        SmartDashboard.putBoolean("TN - Active", false);
         drive.setMotors(0, 0);
     }
 }

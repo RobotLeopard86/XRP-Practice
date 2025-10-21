@@ -10,17 +10,18 @@ public class Gyro extends SubsystemBase {
     private MedianFilter mfx = new MedianFilter(20);
     private MedianFilter mfy = new MedianFilter(20);
     private MedianFilter mfz = new MedianFilter(20);
+    private MedianFilter mfh = new MedianFilter(20);
 
     public Gyro() {
         gyro.reset();
     }
 
     public double getPitch() {
-        return mfx.calculate(gyro.getAngleY());
+        return mfy.calculate(gyro.getAngleY());
     }
 
     public double getYaw() {
-        return mfx.calculate(gyro.getAngleZ());
+        return mfz.calculate(gyro.getAngleZ());
     }
 
     public double getRoll() {
@@ -29,8 +30,8 @@ public class Gyro extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Rotation (X)", mfx.calculate(gyro.getAngleX()));
-        SmartDashboard.putNumber("Rotation (Y)", mfy.calculate(gyro.getAngleY()));
-        SmartDashboard.putNumber("Rotation (Z)", mfz.calculate(gyro.getAngleZ()));
+        SmartDashboard.putNumber("Roll  (X)", getRoll());
+        SmartDashboard.putNumber("Pitch (Y)", getPitch());
+        SmartDashboard.putNumber("Yaw   (Z)", getYaw());
     }
 }
